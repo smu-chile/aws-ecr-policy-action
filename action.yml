@@ -1,0 +1,59 @@
+name: AWS ECR WITH IMAGE QUNATITY POLICY
+author: Eduardo Mandry <eduardo.mandry@amaris.com>
+branding:
+  icon: upload-cloud
+  color: orange
+description: Create Docker images and push into a ECR repository. It can create a ECR Repository and attach a policy that expires the images after X images are stored
+inputs:
+  access_key_id:
+    description: The AWS access key id
+    required: true
+  secret_access_key:
+    description: The AWS secret access key
+    required: true
+  account_id:
+    description: AWS Account ID
+    required: false
+  assume_role:
+    description: A role to assume under the account_id account.
+    required: false
+    default: ''
+  ecr_registry:
+    description: Name of your ECR registry
+    required: true
+  ecr_repository:
+    description: Name of your ECR repository
+    required: true
+  region:
+    description: The AWS region
+    required: true
+  create_repo:
+    description: Set this to false to skip the creation of the repository if it does not already exist
+    default: true
+  create_policy:
+    description: Set this to true to skip the creation of the repository policy if it does not already exist
+    default: true
+  tags:
+    description: Comma-separated string of ECR image tags
+    default: latest
+  dockerfile:
+    description: Name of Dockerfile to use
+    default: Dockerfile
+  extra_build_args:
+    description: Extra flags to pass to docker build (see docs.docker.com/engine/reference/commandline/build)
+    default: ''
+  path:
+    description: Path to Dockerfile, defaults to the working directory
+    default: .
+  policy_days:
+    description: How many images should exist before expiring an older image
+    default: 5
+  prebuild_script:
+    description: Relative path from top-level to script to run before Docker build
+    required: false
+outputs:
+  image:
+    description: 'The created image name'
+runs:
+  using: docker
+  image: Dockerfile

@@ -1,0 +1,21 @@
+  
+name: Test
+on: [push]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@master
+    - name: Build the Docker image
+      with:
+
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: us-east-1
+
+        ecr_registry: ${{ secrets.ECR_REGISTRY }}
+        ecr_repository: ${{ github.repository }}
+        
+        tags: dev-${{ github.run_number }}
+        create_repo: true
+        
