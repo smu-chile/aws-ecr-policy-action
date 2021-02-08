@@ -18,4 +18,4 @@ jobs:
         
         tags: dev-${{ github.run_number }}
         create_repo: true
-        
+      run: docker build .
