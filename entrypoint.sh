@@ -1,5 +1,5 @@
 #!/bin/bash
-set -e
+set -xe
 
 function main() {
   sanitize "${INPUT_ACCESS_KEY_ID}" "access_key_id"
@@ -8,12 +8,8 @@ function main() {
   sanitize "${INPUT_ACCOUNT_ID}" "account_id"
   sanitize "${INPUT_ECR_REPOSITORY}" "ecr_repository"
   sanitize "${INPUT_ECR_REGISTRY}" "ecr_registry"
-
-  ACCOUNT_URL="$INPUT_ACCOUNT_ID.dkr.ecr.$INPUT_REGION.amazonaws.com"
-
+  
   aws_configure
-  assume_role
-  //login
   run_pre_build_script $INPUT_PREBUILD_SCRIPT
   docker_build $INPUT_TAGS $INPUT_ECR_REGISTRY
   create_ecr_repo $INPUT_CREATE_REPO
@@ -32,27 +28,6 @@ function aws_configure() {
   export AWS_ACCESS_KEY_ID=$INPUT_ACCESS_KEY_ID
   export AWS_SECRET_ACCESS_KEY=$INPUT_SECRET_ACCESS_KEY
   export AWS_DEFAULT_REGION=$INPUT_REGION
-}
-
-function login() {
-  echo "== START LOGIN"
-  LOGIN_COMMAND=$(aws ecr get-login --no-include-email --region $AWS_DEFAULT_REGION)
-  $LOGIN_COMMAND
-  echo "== FINISHED LOGIN"
-}
-
-function assume_role() {
-  if [ "${INPUT_ASSUME_ROLE}" != "" ]; then
-    sanitize "${INPUT_ASSUME_ROLE}" "assume_role"
-    echo "== START ASSUME ROLE"
-    ROLE="arn:aws:iam::${INPUT_ACCOUNT_ID}:role/${INPUT_ASSUME_ROLE}"
-    CREDENTIALS=$(aws sts assume-role --role-arn ${ROLE} --role-session-name ecrpush --query 'Credentials.[AccessKeyId,SecretAccessKey,SessionToken]' --output text)
-    read id key token <<< ${CREDENTIALS}
-    export AWS_ACCESS_KEY_ID="${id}"
-    export AWS_SECRET_ACCESS_KEY="${key}"
-    export AWS_SESSION_TOKEN="${token}"
-    echo "== FINISHED ASSUME ROLE"
-  fi
 }
 
 function create_ecr_repo() {
