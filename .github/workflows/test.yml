@@ -5,7 +5,10 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@master
+    - name: Build the Docker image
+      run: docker build .
+    - name: Upload image to ECR
+      uses: actions/checkout@v2
       with:
         access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
         secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
@@ -16,5 +19,4 @@ jobs:
         
         tags: dev-${{ github.run_number }}
         create_repo: true
-    - name: Build the Docker image
-      run: docker build .
+    
