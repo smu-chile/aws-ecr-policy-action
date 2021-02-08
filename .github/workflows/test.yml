@@ -10,8 +10,8 @@ jobs:
     - name: Upload image to ECR
       uses: ./
       with:
-        access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        access_key_id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         region: us-east-1
 
         ecr_registry: ${{ secrets.ECR_REGISTRY }}
