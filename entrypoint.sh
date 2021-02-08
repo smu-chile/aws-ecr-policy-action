@@ -1,5 +1,5 @@
 #!/bin/bash
-set -xe
+set -e
 
 function main() {
   sanitize "${INPUT_ACCESS_KEY_ID}" "access_key_id"
@@ -8,7 +8,7 @@ function main() {
   sanitize "${INPUT_ACCOUNT_ID}" "account_id"
   sanitize "${INPUT_ECR_REPOSITORY}" "ecr_repository"
   sanitize "${INPUT_ECR_REGISTRY}" "ecr_registry"
-  
+
   aws_configure
   run_pre_build_script $INPUT_PREBUILD_SCRIPT
   docker_build $INPUT_TAGS $INPUT_ECR_REGISTRY
