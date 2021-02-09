@@ -13,11 +13,11 @@ jobs:
       with:
         aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        aws-region: us-east-1
+        aws-region: "us-east-1"
     
     - name: Create repository with the AWS CLI
       env:
-        AWS_DEFAULT_REGION: us-east-1
+        AWS_DEFAULT_REGION: "us-east-1"
         ECR_REPOSITORY: ${{ github.repository }}
       run: |
         aws ecr describe-repositories --region $AWS_DEFAULT_REGION --repository-names $ECR_REPOSITORY > /dev/null 2>&1 || saws ecr create-repository --region $AWS_DEFAULT_REGION --repository-name $ECR_REPOSITORY 
@@ -26,8 +26,8 @@ jobs:
       env: 
         ECR_REPOSITORY: ${{ github.repository }}
       run: |
-        aws ecr get-lifecycle-policy --repository-name $ECR_REPOSITORY > /dev/null 2>&1 || aws ecr put-lifecycle-policy --repository-name $ECR_REPOSITORY --lifecycle-policy-text '{ "rules": [ { "rulePriority": 1, "description": "Rule for Image Expiration", "selection": { "tagStatus": "any", "countType": "imageCountMoreThan", "countNumber": 5, "action": { "type": "expire" } } ] }'
-
+        aws ecr get-lifecycle-policy --repository-name $ECR_REPOSITORY > /dev/null 2>&1 || { "rules": [ { "rulePriority": 1,"description": "Rule for keep Images","selection": {"tagStatus": "any","countType": "imageCountMoreThan","countNumber": 5 }, "action": { "type": "expire" } } ] }
+        
     - name: Login to Amazon ECR
       id: login-ecr
       uses: aws-actions/amazon-ecr-login@v1
