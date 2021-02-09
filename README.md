@@ -2,7 +2,7 @@
 
 # WIP... NOT A FINAL VERSION ...
 
-This Action allows you to create Docker images and push into a ECR repository.
+This Action allows you to create Docker images and push into a ECR repository. If the repository does not exist, it will be created, and added a policy to save only the 5 newer images
 
 ## Parameters
 | Parameter | Type | Default | Description |
