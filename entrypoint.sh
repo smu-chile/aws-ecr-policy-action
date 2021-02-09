@@ -4,7 +4,7 @@ set -e
 function main() {
   sanitize "${INPUT_ACCESS_KEY_ID}" "access_key_id"
   sanitize "${INPUT_SECRET_ACCESS_KEY}" "secret_access_key"
-  sanitize "${INPUT_AWS_REGION}" "region"
+  sanitize "${INPUT_AWS_REGION}" "aws_region"
   sanitize "${INPUT_ACCOUNT_ID}" "account_id"
   sanitize "${INPUT_ECR_REPOSITORY}" "ecr_repository"
   sanitize "${INPUT_ECR_REGISTRY}" "ecr_registry"
@@ -27,14 +27,14 @@ function sanitize() {
 function aws_configure() {
   export AWS_ACCESS_KEY_ID=$INPUT_ACCESS_KEY_ID
   export AWS_SECRET_ACCESS_KEY=$INPUT_SECRET_ACCESS_KEY
-  export AWS_DEFAULT_REGION=$INPUT_REGION
+  export AWS_DEFAULT_REGION=$INPUT_AWS_REGION
 }
 
 function create_ecr_repo() {
   if [ "${1}" = true ]; then
     echo "== START CREATE REPO"
-    aws ecr describe-repositories --region $INPUT_AWS_REGION --repository-names $INPUT_ECR_REPOSITORY > /dev/null 2>&1 || \
-      aws ecr create-repository --region $INPUT_AWS_REGION --repository-name $INPUT_ECR_REPOSITORY '{ "rules": [ { "rulePriority": 1, "description": "Rule for keep Images", "selection": { "tagStatus": "any", "countType": "imageCountMoreThan", "countNumber": $(INPUT_POLICY) }, "action": { "type": "expire" } } ] }'
+    aws ecr describe-repositories --region $AWS_DEFAULT_REGION --repository-names $INPUT_ECR_REPOSITORY > /dev/null 2>&1 || \
+      aws ecr create-repository --region $AWS_DEFAULT_REGION --repository-name $INPUT_ECR_REPOSITORY '{ "rules": [ { "rulePriority": 1, "description": "Rule for keep Images", "selection": { "tagStatus": "any", "countType": "imageCountMoreThan", "countNumber": $(INPUT_POLICY) }, "action": { "type": "expire" } } ] }'
     echo "== FINISHED CREATE REPO"
   fi
 }

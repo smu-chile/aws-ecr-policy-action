@@ -24,7 +24,7 @@ inputs:
   ecr_repository:
     description: Name of your ECR repository
     required: true
-  region:
+  aws_region:
     description: The AWS region
     required: true
     default: "us-east-1"
