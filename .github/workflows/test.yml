@@ -9,10 +9,9 @@ jobs:
 
     - name: EveryThing
       uses: ./
-      env:
-        ACTIONS_ALLOW_UNSECURE_COMMANDS: true
       with:
         access_key_id: ${{ secrets.AWS_ACCESS_KEY_ID }}
         secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         region: eu-east-1
-    
+        repo: ${{ github.repository }}
+        tag: dev-${{ github.run_number }}    
