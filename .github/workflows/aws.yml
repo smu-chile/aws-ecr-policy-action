@@ -26,8 +26,8 @@ jobs:
       env: 
         ECR_REPOSITORY: ${{ github.repository }}
       run: |
-        aws ecr get-lifecycle-policy --repository-name $ECR_REPOSITORY > /dev/null 2>&1 || { "rules": [ { "rulePriority": 1,"description": "Rule for keep Images","selection": {"tagStatus": "any","countType": "imageCountMoreThan","countNumber": 5 }, "action": { "type": "expire" } } ] }
-        
+        aws ecr get-lifecycle-policy --repository-name $ECR_REPOSITORY > /dev/null 2>&1 || aws ecr put-lifecycle-policy --repository-name $ECR_REPOSITORY --lifecycle-policy-text '{ "rules": [ { "rulePriority": 1,"description": "Rule for keep Images","selection": {"tagStatus": "any","countType": "imageCountMoreThan","countNumber": 5 }, "action": { "type": "expire" } } ] }'
+
     - name: Login to Amazon ECR
       id: login-ecr
       uses: aws-actions/amazon-ecr-login@v1
