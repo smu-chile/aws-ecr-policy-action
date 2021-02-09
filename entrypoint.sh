@@ -5,7 +5,6 @@ function main() {
   sanitize "${INPUT_ACCESS_KEY_ID}" "access_key_id"
   sanitize "${INPUT_SECRET_ACCESS_KEY}" "secret_access_key"
   sanitize "${INPUT_AWS_REGION}" "aws_region"
-  sanitize "${INPUT_ACCOUNT_ID}" "account_id"
   sanitize "${INPUT_ECR_REPOSITORY}" "ecr_repository"
   sanitize "${INPUT_ECR_REGISTRY}" "ecr_registry"
 
