@@ -25,8 +25,9 @@ jobs:
     - name: Create policy with the AWS CLI
       env: 
         ECR_REPOSITORY: ${{ github.repository }}
+        IMAGE_COUNT: 5
       run: |
-        aws ecr get-lifecycle-policy --repository-name $ECR_REPOSITORY > /dev/null 2>&1 || aws ecr put-lifecycle-policy --repository-name $ECR_REPOSITORY --lifecycle-policy-text '{ "rules": [ { "rulePriority": 1,"description": "Rule for keep Images","selection": {"tagStatus": "any","countType": "imageCountMoreThan","countNumber": 5 }, "action": { "type": "expire" } } ] }'
+        aws ecr get-lifecycle-policy --repository-name $ECR_REPOSITORY > /dev/null 2>&1 || aws ecr put-lifecycle-policy --repository-name $ECR_REPOSITORY --lifecycle-policy-text '{ "rules": [ { "rulePriority": 1,"description": "Rule for keep Images","selection": {"tagStatus": "any","countType": "imageCountMoreThan","countNumber": $IMAGE_COUNT }, "action": { "type": "expire" } } ] }'
 
     - name: Login to Amazon ECR
       id: login-ecr
