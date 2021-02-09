@@ -33,8 +33,8 @@ function aws_configure() {
 function create_ecr_repo() {
   if [ "${1}" = true ]; then
     echo "== START CREATE REPO"
-    aws ecr describe-repositories --region $AWS_DEFAULT_REGION --repository-names $INPUT_ECR_REPOSITORY > /dev/null 2>&1 || \
-      aws ecr create-repository --region $AWS_DEFAULT_REGION --repository-name $INPUT_ECR_REPOSITORY '{ "rules": [ { "rulePriority": 1, "description": "Rule for keep Images", "selection": { "tagStatus": "any", "countType": "imageCountMoreThan", "countNumber": $(INPUT_POLICY) }, "action": { "type": "expire" } } ] }'
+    aws ecr describe-repositories --region $INPUT_AWS_REGION --repository-names $INPUT_ECR_REPOSITORY > /dev/null 2>&1 || \
+      aws ecr create-repository --region $INPUT_AWS_REGION --repository-name $INPUT_ECR_REPOSITORY '{ "rules": [ { "rulePriority": 1, "description": "Rule for keep Images", "selection": { "tagStatus": "any", "countType": "imageCountMoreThan", "countNumber": $(INPUT_POLICY) }, "action": { "type": "expire" } } ] }'
     echo "== FINISHED CREATE REPO"
   fi
 }

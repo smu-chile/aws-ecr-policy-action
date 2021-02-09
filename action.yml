@@ -27,7 +27,7 @@ inputs:
   region:
     description: The AWS region
     required: true
-    default: us-east-1
+    default: "us-east-1"
   create_repo:
     description: Set this to false to skip the creation of the repository if it does not already exist
     default: true
