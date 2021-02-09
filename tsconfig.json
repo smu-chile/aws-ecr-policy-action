@@ -1,0 +1,34 @@
+{
+    "compilerOptions": {
+      // Strict typing creates more stable code
+      "alwaysStrict": true,
+      "baseUrl": ".",
+      // Definition files help us provide better type definitions
+      "declaration": true,
+      // Because who doesn't like decorators?
+      "emitDecoratorMetadata": true,
+      "experimentalDecorators": true,
+      // It makes for better debugging
+      "inlineSourceMap": true,
+      "inlineSources": true,
+      // Have a baseline for what should work in JS
+      "lib": ["es2018"],
+      "module": "commonjs",
+      // Fallthroughs make for simpler code
+      "noFallthroughCasesInSwitch": false,
+      // Seriously, don't do it
+      "noImplicitAny": true,
+      "noImplicitReturns": true,
+      "noImplicitThis": true,
+      "noUnusedLocals": false,
+      "noUnusedParameters": false,
+      // Strict type checking makes better code
+      "strict": true,
+      "strictNullChecks": true,
+      "strictPropertyInitialization": false,
+      // Have a specific baseline
+      "target":"ES2018",
+      "outDir": "./lib",
+      "rootDir": "./src"
+    },
+  }
