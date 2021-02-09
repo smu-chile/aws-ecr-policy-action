@@ -19,4 +19,5 @@ jobs:
         
         tags: dev-${{ github.run_number }}
         create_repo: true
+        create_policy: true
     

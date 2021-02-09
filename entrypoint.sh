@@ -10,9 +10,9 @@ function main() {
 
   aws_configure
   run_pre_build_script $INPUT_PREBUILD_SCRIPT
-  docker_build $INPUT_TAGS $INPUT_ECR_REGISTRY
   create_ecr_repo $INPUT_CREATE_REPO
-  update_ecr_repo_policy $INPUT_POLICY
+  update_ecr_repo_policy $INPUT_CREATE_POLICY
+  docker_build $INPUT_TAGS $INPUT_ECR_REGISTRY
   docker_push_to_ecr $INPUT_TAGS $INPUT_ECR_REGISTRY
 }
 
@@ -40,10 +40,10 @@ function create_ecr_repo() {
 
 function update_ecr_repo_policy() {
   if [ "${1}" = true ]; then
-    echo "== START CREATE REPO"
+    echo "== START CREATE POLICY REPO"
     aws ecr get-lifecycle-policy --repository-name $INPUT_ECR_REPOSITORY > /dev/null 2>&1 || \
-      aws ecr put-lifecycle-policy --repository-name $INPUT_ECR_REPOSITORY --lifecycle-policy-text '{ "rules": [ { "rulePriority": 1, "description": "Rule for Image Expiration", "selection": { "tagStatus": "any", "countType": "imageCountMoreThan", "countNumber": $(INPUT_POLICY) }, "action": { "type": "expire" } } ] }'
-    echo "== FINISHED CREATE REPO"
+      aws ecr put-lifecycle-policy --repository-name $INPUT_ECR_REPOSITORY --lifecycle-policy-text '{ "rules": [ { "rulePriority": 1, "description": "Rule for Image Expiration", "selection": { "tagStatus": "any", "countType": "imageCountMoreThan", "countNumber": $(INPUT_POLICY_IMAGE_NUMBER }, "action": { "type": "expire" } } ] }'
+    echo "== FINISHED CREATE POLICY REPO"
   fi
 }
 

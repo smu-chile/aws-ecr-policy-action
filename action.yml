@@ -39,7 +39,7 @@ inputs:
   path:
     description: Path to Dockerfile, defaults to the working directory
     default: .
-  policy_days:
+  policy_image_number:
     description: How many images should exist before expiring an older image
     default: 5
   prebuild_script:
