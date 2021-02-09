@@ -2261,7 +2261,7 @@ class Inputs {
 }
 __decorate([
     decorators_1.Input('account_id'),
-    decorators_1.Required,
+    decorators_1.Optional,
     __metadata("design:type", String)
 ], Inputs.prototype, "AwsAccountID", void 0);
 __decorate([
