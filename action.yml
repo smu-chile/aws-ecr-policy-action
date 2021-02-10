@@ -1,4 +1,4 @@
-name: AWS ECR WITH IMAGE QUNATITY POLICY
+name: AWS ECR WITH IMAGE QUANTITY POLICY
 author: Eduardo Mandry <eduardo.mandry@amaris.com>
 branding:
   icon: upload-cloud
@@ -19,13 +19,14 @@ inputs:
     required: true
   region:
     description: The AWS region
+    default: "us-east-1"
     required: true
   create_repo:
     description: Set this to true to create the repository if it does not already exist
-    default: false
+    default: true
   create_policy:
     description: Set this to true to create the repository if it does not already exist
-    default: false
+    default: true
   tags:
     description: Comma-separated string of ECR image tags
     default: latest

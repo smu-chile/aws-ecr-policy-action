@@ -7,14 +7,16 @@ This Action allows you to create Docker images and push into a ECR repository.
 |-----------|------|---------|-------------|
 | `access_key_id` | `string` | | Your AWS access key id |
 | `secret_access_key` | `string` | | Your AWS secret access key |
-| `account_id` | `string` | | Your AWS Account ID |
+| `ecr_registry` | `string` | | Your AWS registry |
 | `repo` | `string` | | Name of your ECR repository |
 | `region` | `string` | | Your AWS region |
-| `create_repo` | `boolean` | `false` | Set this to true to create the repository if it does not already exist |
+| `create_repo` | `boolean` | `true` | Set this to false to bypass the creation of the repository (if it does not already exist) |
+| `create_policy` | `boolean` | `true` | Set this to false to bypass the creation of the maximum quantity of images policy (if it does not already exist) |
 | `tags` | `string` | `latest` | Comma-separated string of ECR image tags (ex latest,1.0.0,) |
 | `dockerfile` | `string` | `Dockerfile` | Name of Dockerfile to use |
 | `extra_build_args` | `string` | `""` | Extra flags to pass to docker build (see docs.docker.com/engine/reference/commandline/build) |
 | `path` | `string` | `.` | Path to Dockerfile, defaults to the working directory |
+| `policy_max_number` | `integer` | `5` | Maximum number of images to store in the repository (oldest images are deleted) |
 | `prebuild_script` | `string` | | Relative path from top-level to script to run before Docker build |
 
 ## Usage
