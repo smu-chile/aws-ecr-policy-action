@@ -7,6 +7,8 @@ function main() {
   sanitize "${INPUT_REGION}" "region"
   sanitize "${INPUT_REPO}" "repo"
   sanitize "${INPUT_ECR_REGISTRY}" "ecr_registry"
+  sanitize "${INPUT_CREATE_REPO}" "create_repo"
+  sanitize "${INPUT_CREATE_REPO_POLICY}" "create_policy"
   
 
   aws_configure
@@ -14,7 +16,7 @@ function main() {
   run_pre_build_script $INPUT_PREBUILD_SCRIPT
   docker_build $INPUT_TAGS $INPUT_ECR_REGISTRY
   create_ecr_repo $INPUT_CREATE_REPO
-  update_ecr_repo_policy $INPUT_POLICY
+  update_ecr_repo_policy $INPUT_CREATE_REPO_POLICY
   docker_push_to_ecr $INPUT_TAGS $INPUT_ECR_REGISTRY
 }
 
@@ -49,10 +51,10 @@ function create_ecr_repo() {
 
 function update_ecr_repo_policy() {
   if [ "${1}" = true ]; then
-    echo "== START CREATE REPO"
+    echo "== START CREATE REPO POLICY"
     aws ecr get-lifecycle-policy --repository-name $INPUT_REPO > /dev/null 2>&1 || \
       aws ecr put-lifecycle-policy --repository-name $INPUT_REPO --lifecycle-policy-text '{ "rules": [ { "rulePriority": 1, "description": "Rule for keep Images", "selection": { "tagStatus": "any", "countType": "imageCountMoreThan", "countNumber": 5 }, "action": { "type": "expire" } } ] }'
-    echo "== FINISHED CREATE REPO"
+    echo "== FINISHED CREATE REPO POLICY"
   fi
 }
 
