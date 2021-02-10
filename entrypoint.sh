@@ -8,7 +8,7 @@ function main() {
   sanitize "${INPUT_REPO}" "repo"
   sanitize "${INPUT_ECR_REGISTRY}" "ecr_registry"
   sanitize "${INPUT_CREATE_REPO}" "create_repo"
-  sanitize "${INPUT_CREATE_REPO_POLICY}" "create_policy"
+  sanitize "${INPUT_CREATE_POLICY}" "create_policy"
   
 
   aws_configure
@@ -16,7 +16,7 @@ function main() {
   run_pre_build_script $INPUT_PREBUILD_SCRIPT
   docker_build $INPUT_TAGS $INPUT_ECR_REGISTRY
   create_ecr_repo $INPUT_CREATE_REPO
-  update_ecr_repo_policy $INPUT_CREATE_REPO_POLICY
+  update_ecr_repo_policy $INPUT_CREATE_POLICY
   docker_push_to_ecr $INPUT_TAGS $INPUT_ECR_REGISTRY
 }
 
