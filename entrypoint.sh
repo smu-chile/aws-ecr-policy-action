@@ -71,7 +71,7 @@ function docker_build() {
   local docker_tag_args=""
   local DOCKER_TAGS=$(echo "$TAG" | tr "," "\n")
   for tag in $DOCKER_TAGS; do
-    docker_tag_args="$docker_tag_args -t $INPUT_REPO:$tag"
+    docker_tag_args="$docker_tag_args -t $2/$INPUT_REPO:$tag"
   done
 
   docker build $INPUT_EXTRA_BUILD_ARGS -f $INPUT_DOCKERFILE $docker_tag_args $INPUT_PATH
@@ -83,7 +83,7 @@ function docker_push_to_ecr() {
   local TAG=$1
   local DOCKER_TAGS=$(echo "$TAG" | tr "," "\n")
   for tag in $DOCKER_TAGS; do
-    docker push $INPUT_REPO:$tag
+    docker push $2/$INPUT_REPO:$tag
     echo ::set-output name=image::$2/$INPUT_REPO:$tag
   done
   echo "== FINISHED PUSH TO ECR"
