@@ -14,7 +14,5 @@ jobs:
         secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         ecr_registry: ${{ secrets.ECR_REGISTRY }}
         region: us-east-1
-        create_repo: true
-        create_policy: true
         repo: ${{ github.repository }}
         tags: dev-${{ github.run_number }}    
