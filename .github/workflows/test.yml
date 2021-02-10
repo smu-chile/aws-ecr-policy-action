@@ -12,6 +12,6 @@ jobs:
       with:
         access_key_id: ${{ secrets.AWS_ACCESS_KEY_ID }}
         secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        region: eu-east-1
+        region: us-east-1
         repo: ${{ github.repository }}
         tags: dev-${{ github.run_number }}    
