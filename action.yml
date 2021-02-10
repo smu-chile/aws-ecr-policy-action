@@ -11,6 +11,9 @@ inputs:
   secret_access_key:
     description: The AWS secret access key
     required: true
+  ecr_registry:
+    description: The AWS ECR Registry
+    required: true
   repo:
     description: Name of your ECR repository
     required: true

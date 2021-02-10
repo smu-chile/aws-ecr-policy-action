@@ -6,14 +6,16 @@ function main() {
   sanitize "${INPUT_SECRET_ACCESS_KEY}" "secret_access_key"
   sanitize "${INPUT_REGION}" "region"
   sanitize "${INPUT_REPO}" "repo"
+  sanitize "${INPUT_ECR_REGISTRY}" "ecr_registry"
+  
 
   aws_configure
   login
   run_pre_build_script $INPUT_PREBUILD_SCRIPT
-  docker_build $INPUT_TAGS $ACCOUNT_URL
+  docker_build $INPUT_TAGS $INPUT_ECR_REGISTRY
   create_ecr_repo $INPUT_CREATE_REPO
   update_ecr_repo_policy $INPUT_POLICY
-  docker_push_to_ecr $INPUT_TAGS $ACCOUNT_URL
+  docker_push_to_ecr $INPUT_TAGS $INPUT_ECR_REGISTRY
 }
 
 function sanitize() {
@@ -69,7 +71,7 @@ function docker_build() {
   local docker_tag_args=""
   local DOCKER_TAGS=$(echo "$TAG" | tr "," "\n")
   for tag in $DOCKER_TAGS; do
-    docker_tag_args="$docker_tag_args -t $2/$INPUT_REPO:$tag"
+    docker_tag_args="$docker_tag_args -t $INPUT_REPO:$tag"
   done
 
   docker build $INPUT_EXTRA_BUILD_ARGS -f $INPUT_DOCKERFILE $docker_tag_args $INPUT_PATH
