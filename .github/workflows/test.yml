@@ -16,3 +16,5 @@ jobs:
         region: us-east-1
         repo: ${{ github.repository }}
         tags: dev-${{ github.run_number }}    
+        create_policy: true
+        create_repo: true
