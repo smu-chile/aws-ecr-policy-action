@@ -43,9 +43,13 @@ function login() {
 
 function create_ecr_repo() {
   if [ "${1}" = true ]; then
+    scanDirective = ""
+    if [ "${INPUT_SCAN_IMAGES}" = true ]; then
+      scanDirective = "--image-scanning-configuration scanOnPush=true"
+    fi
     echo "== START CREATE REPO"
     aws ecr describe-repositories --region $AWS_DEFAULT_REGION --repository-names $INPUT_REPO > /dev/null 2>&1 || \
-      aws ecr create-repository --region $AWS_DEFAULT_REGION --repository-name $INPUT_REPO --image-scanning-configuration $INPUT_SCAN_IMAGES
+      aws ecr create-repository --region $AWS_DEFAULT_REGION --repository-name $INPUT_REPO $scanDirective
     echo "== FINISHED CREATE REPO"
   fi
 }
