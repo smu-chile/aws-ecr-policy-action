@@ -1,4 +1,4 @@
-# AWS ECR Action
+# AWS ECR Policy Action
 
 This Action allows you to create Docker images and push into a ECR repository. Also, it checks if the repository exist, otherwise, it creates it. Also, it creates a policy that holds a maxium of, by default, 5 images in the repository by default
 
@@ -12,7 +12,7 @@ This Action allows you to create Docker images and push into a ECR repository. A
 | `region` | `string` | | Your AWS region |
 | `create_repo` | `boolean` | `true` | Set this to false to bypass the creation of the repository (if it does not already exist) |
 | `create_policy` | `boolean` | `true` | Set this to false to bypass the creation of the maximum quantity of images policy (if it does not already exist) |
-| `scan_images` | `boolean` | `false` | Set this to true to configure the repository to scan the newly upload image |
+| `scan_images` | `boolean` | `true` | Set this to true to configure the repository to scan the newly upload image |
 | `tags` | `string` | `latest` | Comma-separated string of ECR image tags (ex latest,1.0.0,) |
 | `dockerfile` | `string` | `Dockerfile` | Name of Dockerfile to use |
 | `extra_build_args` | `string` | `""` | Extra flags to pass to docker build (see docs.docker.com/engine/reference/commandline/build) |

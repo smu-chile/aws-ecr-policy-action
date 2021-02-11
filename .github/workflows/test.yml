@@ -15,5 +15,4 @@ jobs:
         ecr_registry: ${{ secrets.ECR_REGISTRY }}
         region: us-east-1
         repo: ${{ github.repository }}
-        scan_images: true
         tags: dev-${{ github.run_number }}    
