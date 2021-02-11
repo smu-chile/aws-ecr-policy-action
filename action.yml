@@ -3,7 +3,7 @@ author: Eduardo Mandry <eduardo.mandry@amaris.com>
 branding:
   icon: upload-cloud
   color: orange
-description: Create Docker images and push into a ECR repository. It can create a ECR Repository and attach a policy that expires the images after X images are stored
+description: Create Docker images and push into a ECR repository. It can create it and attach a policy to store a max amount
 inputs:
   access_key_id:
     description: The AWS access key id
