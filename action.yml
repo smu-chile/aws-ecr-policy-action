@@ -30,6 +30,9 @@ inputs:
   tags:
     description: Comma-separated string of ECR image tags
     default: latest
+  scan_images:
+    description: Set this to true so you allow the repository to scan newly upload images
+    default: true
   dockerfile:
     description: Name of Dockerfile to use
     default: Dockerfile

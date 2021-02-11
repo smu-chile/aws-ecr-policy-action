@@ -9,6 +9,7 @@ function main() {
   sanitize "${INPUT_ECR_REGISTRY}" "ecr_registry"
   sanitize "${INPUT_CREATE_REPO}" "create_repo"
   sanitize "${INPUT_CREATE_POLICY}" "create_policy"
+  sanitize "${INPUT_SCAN_IMAGES}" "scan_images"
   
 
   aws_configure
@@ -44,7 +45,7 @@ function create_ecr_repo() {
   if [ "${1}" = true ]; then
     echo "== START CREATE REPO"
     aws ecr describe-repositories --region $AWS_DEFAULT_REGION --repository-names $INPUT_REPO > /dev/null 2>&1 || \
-      aws ecr create-repository --region $AWS_DEFAULT_REGION --repository-name $INPUT_REPO 
+      aws ecr create-repository --region $AWS_DEFAULT_REGION --repository-name $INPUT_REPO --image-scanning-configuration $INPUT_SCAN_IMAGES
     echo "== FINISHED CREATE REPO"
   fi
 }
