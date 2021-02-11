@@ -1,4 +1,4 @@
-name: AWS ECR WITH IMAGE QUANTITY POLICY
+name: AWS ECR IMAGE UPLOAD WITH REPO AND POLICY
 author: Eduardo Mandry <eduardo.mandry@amaris.com>
 branding:
   icon: upload-cloud
