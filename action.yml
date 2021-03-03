@@ -42,9 +42,9 @@ inputs:
   path:
     description: Path to Dockerfile, defaults to the working directory
     default: .
-  policy_max_number:
-    description: How many days should pass before expiring an image
-    default: 5
+  ecr_policies:
+    description: Description of the policies and the amount of images to keep. 
+    default: any:5
   prebuild_script:
     description: Relative path from top-level to script to run before Docker build
     required: false
