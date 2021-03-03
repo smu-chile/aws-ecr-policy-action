@@ -15,6 +15,5 @@ jobs:
         ecr_registry: ${{ secrets.ECR_REGISTRY }}
         region: us-east-1
         repo: ${{ github.repository }}
-        tags: dev-${{ github.run_number }}  
-        create_repo: true
-        create_policy: true
+        tags: stg-${{ github.run_number }}
+        ecr_policies: dev:5 stg:2
