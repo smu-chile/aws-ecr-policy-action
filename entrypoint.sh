@@ -26,8 +26,8 @@ function checkDuplicatedRule() {
     numberOfRules=`echo "$1" | tr " " "\n" | egrep "^$2:" | wc -l`
 
     if [ $numberOfRules -gt 1 ] ; then  
-        echo "======> There are multiples ocurrences of the same ruke"
-        exit
+        echo "======> There are multiples ocurrences of the same rule"
+        exit 1
     fi;
 }
 
@@ -69,7 +69,7 @@ function update_ecr_repo_policy() {
     rulesToConfigure=`echo "$INPUT_ECR_POLICIES" | tr " " "\n" | egrep ":" | wc -l`
     if [ $rulesToConfigure -lt 1 ] ; then  
         echo "======> There are no rules to configure"
-        exit
+        exit 1
     fi;
 
     echo "== END RULES VALIDATION"
@@ -90,7 +90,7 @@ function update_ecr_repo_policy() {
       noNumbersFound=`echo "$value" | tr -d " " | egrep '\D|^$' | wc -l`
       if [ $noNumbersFound -gt 0 ] ; then  
           echo "======> Not numbers found in the images to keep section"
-          exit
+          exit 1
       fi;   
 
       IMAGE_COUNT=$value
