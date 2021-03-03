@@ -16,4 +16,4 @@ jobs:
         region: us-east-1
         repo: ${{ github.repository }}
         tags: stg-${{ github.run_number }}
-        ecr_policies: dev:5 stg:2
+        ecr_policies: dev:5 stg:2z
