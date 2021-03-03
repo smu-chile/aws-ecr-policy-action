@@ -53,7 +53,7 @@ function login() {
 }
 
 function create_ecr_repo() {
-  if [ "${1}" = true ]; then
+  if [ "${1}" = "true" ]; then
     echo "== START CREATE REPO"
     aws ecr describe-repositories --region $AWS_DEFAULT_REGION --repository-names $INPUT_REPO > /dev/null 2>&1 || \
       aws ecr create-repository --region $AWS_DEFAULT_REGION --repository-name $INPUT_REPO --image-scanning-configuration scanOnPush=$INPUT_SCAN_IMAGES
@@ -62,7 +62,7 @@ function create_ecr_repo() {
 }
 
 function update_ecr_repo_policy() {
-  if [ "${1}" = true ]; then
+  if [ "${1}" = "true" ]; then
 
     echo "== RULES VALIDATION"
 
