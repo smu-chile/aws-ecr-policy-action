@@ -107,7 +107,7 @@ function update_ecr_repo_policy() {
     echo "== END BUILD RULES"
     echo "== START CREATE REPO POLICY"
     aws ecr get-lifecycle-policy --repository-name $INPUT_REPO > /dev/null 2>&1 && \
-      aws ecr put-lifecycle-policy --repository-name $INPUT_REPO --lifecycle-policy-text "$ruleText" 
+      aws ecr put-lifecycle-policy --repository-name $INPUT_REPO --lifecycle-policy-text "$ruleStart$ruleText$ruleEnd" 
     echo "== FINISHED CREATE REPO POLICY"
   fi
 }
