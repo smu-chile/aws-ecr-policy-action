@@ -17,7 +17,7 @@ This Action allows you to create Docker images and push into a ECR repository. A
 | `dockerfile` | `string` | `Dockerfile` | Name of Dockerfile to use |
 | `extra_build_args` | `string` | `""` | Extra flags to pass to docker build (see docs.docker.com/engine/reference/commandline/build) |
 | `path` | `string` | `.` | Path to Dockerfile, defaults to the working directory |
-| `policy_max_number` | `integer` | `5` | Maximum number of images to store in the repository (oldest images are deleted) |
+| `ecr_policies` | `string` | `any:5` | Description of policies in a form <tag>:<number of images to keep> |
 | `prebuild_script` | `string` | | Relative path from top-level to script to run before Docker build |
 
 ## Usage
@@ -39,6 +39,7 @@ jobs:
 
 ## Reference
 * https://github.com/kciter/aws-ecr-action
+* https://docs.aws.amazon.com/AmazonECR/latest/userguide/LifecyclePolicies.html
 
 ## License
 The MIT License (MIT)

@@ -15,4 +15,4 @@ jobs:
         ecr_registry: ${{ secrets.ECR_REGISTRY }}
         region: us-east-1
         repo: ${{ github.repository }}
-        tags: dev-${{ github.run_number }}    
+        tags: dev-${{ github.run_number }}

@@ -9,6 +9,7 @@ function main() {
   sanitize "${INPUT_ECR_REGISTRY}" "ecr_registry"
   sanitize "${INPUT_CREATE_REPO}" "create_repo"
   sanitize "${INPUT_CREATE_POLICY}" "create_policy"
+  sanitize "${INPUT_ECR_POLICIES}" "ecr_policies"
   sanitize "${INPUT_SCAN_IMAGES}" "scan_images"
   
 
@@ -17,9 +18,19 @@ function main() {
   run_pre_build_script $INPUT_PREBUILD_SCRIPT
   docker_build $INPUT_TAGS $INPUT_ECR_REGISTRY
   create_ecr_repo $INPUT_CREATE_REPO
-  update_ecr_repo_policy $INPUT_CREATE_POLICY
+  update_ecr_repo_policy $INPUT_CREATE_POLICY $INPUT_ECR_POLICIES
   docker_push_to_ecr $INPUT_TAGS $INPUT_ECR_REGISTRY
 }
+
+function checkDuplicatedRule() {
+    numberOfRules=`echo "$1" | tr " " "\n" | egrep "^$2:" | wc -l`
+
+    if [ $numberOfRules -gt 1 ] ; then  
+        echo "======> There are multiples ocurrences of the same rule"
+        exit 1
+    fi;
+}
+
 
 function sanitize() {
   if [ -z "${1}" ]; then
@@ -42,7 +53,7 @@ function login() {
 }
 
 function create_ecr_repo() {
-  if [ "${1}" = true ]; then
+  if [ "${1}" == "true" ]; then
     echo "== START CREATE REPO"
     aws ecr describe-repositories --region $AWS_DEFAULT_REGION --repository-names $INPUT_REPO > /dev/null 2>&1 || \
       aws ecr create-repository --region $AWS_DEFAULT_REGION --repository-name $INPUT_REPO --image-scanning-configuration scanOnPush=$INPUT_SCAN_IMAGES
@@ -51,10 +62,52 @@ function create_ecr_repo() {
 }
 
 function update_ecr_repo_policy() {
-  if [ "${1}" = true ]; then
+  if [ "${1}" == "true" ]; then
+
+    echo "== RULES VALIDATION"
+
+    rulesToConfigure=`echo "$INPUT_ECR_POLICIES" | tr " " "\n" | egrep ":" | wc -l`
+    if [ $rulesToConfigure -lt 1 ] ; then  
+        echo "======> There are no rules to configure"
+        exit 1
+    fi;
+
+    echo "== END RULES VALIDATION"
+    echo "== BUILD RULES"
+
+    read -r -a rules <<< $INPUT_ECR_POLICIES
+    icont=0
+    ruleStart="{ \"rules\": [ "
+    ruleEnd="] }"
+
+    for rule in ${rules[@]}; do 
+      icont=$((icont + 1)) 
+      prefix="${rule%%:*}"
+
+      value="${rule##*:}"
+      
+      lowerPrefix=`echo "$prefix" | tr '[:upper:]' '[:lower:]'`
+      noNumbersFound=`echo "$value" | tr -d " " | egrep '\D|^$' | wc -l`
+      if [ $noNumbersFound -gt 0 ] ; then  
+          echo "======> Not numbers found in the images to keep section"
+          exit 1
+      fi;   
+
+      IMAGE_COUNT=$value
+      checkDuplicatedRule "$(echo ${rules[@]})" "$prefix" "$icont"
+
+      if [ "$lowerPrefix" != "any" ] && [ "$lowerPrefix" != "untagged" ]; then 
+          ruleText="$ruleText{ \"rulePriority\": $icont,\"description\": \"Rule for keep Images for $prefix\",\"selection\": {\"tagStatus\": \"tagged\", \"tagPrefixList\": [ \"$prefix\" ], \"countType\": \"imageCountMoreThan\",\"countNumber\": $IMAGE_COUNT }, \"action\": { \"type\": \"expire\" } },"
+      else
+          ruleText="$ruleText{ \"rulePriority\": $icont,\"description\": \"Rule for keep $lowerPrefix Images \",\"selection\": {\"tagStatus\": \"$lowerPrefix\", \"countType\": \"imageCountMoreThan\",\"countNumber\": $IMAGE_COUNT }, \"action\": { \"type\": \"expire\" } },"
+      fi
+    done
+    ruleText="${ruleText%?}"
+    
+    echo "== END BUILD RULES"
     echo "== START CREATE REPO POLICY"
-    aws ecr get-lifecycle-policy --repository-name $INPUT_REPO > /dev/null 2>&1 || \
-      aws ecr put-lifecycle-policy --repository-name $INPUT_REPO --lifecycle-policy-text '{ "rules": [ { "rulePriority": 1, "description": "Rule for keep Images", "selection": { "tagStatus": "any", "countType": "imageCountMoreThan", "countNumber": 5 }, "action": { "type": "expire" } } ] }'
+    aws ecr get-lifecycle-policy --repository-name $INPUT_REPO > /dev/null 2>&1 && \
+      aws ecr put-lifecycle-policy --repository-name $INPUT_REPO --lifecycle-policy-text "$ruleStart$ruleText$ruleEnd" 
     echo "== FINISHED CREATE REPO POLICY"
   fi
 }
