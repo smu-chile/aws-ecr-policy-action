@@ -23,28 +23,36 @@ inputs:
     required: true
   create_repo:
     description: Set this to true to create the repository if it does not already exist
-    default: true
+    default: "true"
+    required: false
   create_policy:
     description: Set this to true to create the repository if it does not already exist
-    default: true
+    default: "true"
+    required: false
   tags:
     description: Comma-separated string of ECR image tags
-    default: latest
+    default: "latest"
+    required: false
   scan_images:
     description: Set this to true so you allow the repository to scan newly upload images
-    default: true
+    default: "true"
+    required: false
   dockerfile:
     description: Name of Dockerfile to use
-    default: Dockerfile
+    default: "Dockerfile"
+    required: false
   extra_build_args:
     description: Extra flags to pass to docker build (see docs.docker.com/engine/reference/commandline/build)
-    default: ''
+    default: ""
+    required: false
   path:
     description: Path to Dockerfile, defaults to the working directory
-    default: .
+    default: "."
+    required: false
   ecr_policies:
     description: Description of the policies and the amount of images to keep. 
-    default: any:5
+    default: "any:5"
+    required: false
   prebuild_script:
     description: Relative path from top-level to script to run before Docker build
     required: false
