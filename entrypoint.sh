@@ -34,8 +34,8 @@ function check_behavior_mode() {
     if [ -z "$INPUT_IMAGE_NAME" ]; then 
       echo "======> If behavior is set to upload, you must specify the image name"
       exit 1 
-    }
-  }
+    fi;
+  fi;
 } 
 function checkDuplicatedRule() {
     numberOfRules=`echo "$1" | tr " " "\n" | egrep "^$2:" | wc -l`
@@ -73,7 +73,7 @@ function create_ecr_repo() {
     aws ecr describe-repositories --region $AWS_DEFAULT_REGION --repository-names $INPUT_REPO > /dev/null 2>&1 || \
       aws ecr create-repository --region $AWS_DEFAULT_REGION --repository-name $INPUT_REPO --image-scanning-configuration scanOnPush=$INPUT_SCAN_IMAGES
     echo "== FINISHED CREATE REPO"
-  fi
+  fi;
 }
 
 function update_ecr_repo_policy() {
