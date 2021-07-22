@@ -24,7 +24,7 @@ function main() {
     run_pre_build_script $INPUT_PREBUILD_SCRIPT
     docker_build $INPUT_TAGS $INPUT_ECR_REGISTRY
   else
-    docker_tag $INPUT_IMAGE_NAME $INPUT_ECR_REGISTRY
+    docker_tag $INPUT_TAGS $INPUT_ECR_REGISTRY
   fi;
   docker_push_to_ecr $INPUT_TAGS $INPUT_ECR_REGISTRY
 }
