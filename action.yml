@@ -56,6 +56,13 @@ inputs:
   prebuild_script:
     description: Relative path from top-level to script to run before Docker build
     required: false
+  behavior:
+    description: Builds or just upload a previously build image
+    default: "build"
+    required: true
+  image_name:
+    description: Builds or just upload a previously build image
+    required: false
 outputs:
   image:
     description: 'The created image name'
