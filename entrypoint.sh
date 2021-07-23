@@ -12,6 +12,8 @@ function main() {
   sanitize "${INPUT_ECR_POLICIES}" "ecr_policies"
   sanitize "${INPUT_SCAN_IMAGES}" "scan_images"
   sanitize "${INPUT_BEHAVIOR}" "behavior"
+
+  shopt -s nocasematch;
   
   check_behavior_mode
   aws_configure

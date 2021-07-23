@@ -19,7 +19,8 @@ This Action allows you to create Docker images and push into a ECR repository. A
 | `path` | `string` | `.` | Path to Dockerfile, defaults to the working directory |
 | `ecr_policies` | `string` | `any:5` | Description of policies in a form <tag>:<number of images to keep><space><tag>:<number of images to keep>|
 | `prebuild_script` | `string` | | Relative path from top-level to script to run before Docker build |
-
+| `behavior` | `string` | `build` | What is the expected behavior, build a new image or upload a previously built one. Valid options are `build` or `upload`|
+| `image_name` | `string` | `""` | Name of the prebuilt image. Is mandatory if behavior is set to `upload`|
 ## Usage
 ```yaml
 jobs:
