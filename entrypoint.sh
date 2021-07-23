@@ -11,17 +11,34 @@ function main() {
   sanitize "${INPUT_CREATE_POLICY}" "create_policy"
   sanitize "${INPUT_ECR_POLICIES}" "ecr_policies"
   sanitize "${INPUT_SCAN_IMAGES}" "scan_images"
-  
+  sanitize "${INPUT_BEHAVIOR}" "behavior"
 
+  shopt -s nocasematch;
+  
+  check_behavior_mode
   aws_configure
   login
-  run_pre_build_script $INPUT_PREBUILD_SCRIPT
-  docker_build $INPUT_TAGS $INPUT_ECR_REGISTRY
+
   create_ecr_repo $INPUT_CREATE_REPO
   update_ecr_repo_policy $INPUT_CREATE_POLICY $INPUT_ECR_POLICIES
+
+  if [ $INPUT_BEHAVIOR == "build" ] ; then 
+    run_pre_build_script $INPUT_PREBUILD_SCRIPT
+    docker_build $INPUT_TAGS $INPUT_ECR_REGISTRY
+  else
+    docker_tag $INPUT_TAGS $INPUT_ECR_REGISTRY
+  fi;
   docker_push_to_ecr $INPUT_TAGS $INPUT_ECR_REGISTRY
 }
 
+function check_behavior_mode() {
+  if [ $INPUT_BEHAVIOR == "upload" ] ; then  
+    if [ -z "$INPUT_IMAGE_NAME" ]; then 
+      echo "======> If behavior is set to upload, you must specify the image name"
+      exit 1 
+    fi;
+  fi;
+} 
 function checkDuplicatedRule() {
     numberOfRules=`echo "$1" | tr " " "\n" | egrep "^$2:" | wc -l`
 
@@ -58,7 +75,7 @@ function create_ecr_repo() {
     aws ecr describe-repositories --region $AWS_DEFAULT_REGION --repository-names $INPUT_REPO > /dev/null 2>&1 || \
       aws ecr create-repository --region $AWS_DEFAULT_REGION --repository-name $INPUT_REPO --image-scanning-configuration scanOnPush=$INPUT_SCAN_IMAGES
     echo "== FINISHED CREATE REPO"
-  fi
+  fi;
 }
 
 function update_ecr_repo_policy() {
@@ -135,10 +152,23 @@ function docker_build() {
   echo "== FINISHED DOCKERIZE"
 }
 
+function docker_tag() {
+  echo "== START IMAGE TAG"
+
+  local TAG=$1
+  local docker_tag_args=""
+  local DOCKER_TAGS=$(echo "$TAG" | tr "," "\n")
+  for tag in $DOCKER_TAGS; do
+    docker image tag $INPUT_IMAGE_NAME $2/$INPUT_REPO:$tag
+  done
+   
+  echo "== FINISH IMAGE TAG"
+}
 function docker_push_to_ecr() {
   echo "== START PUSH TO ECR"
   local TAG=$1
   local DOCKER_TAGS=$(echo "$TAG" | tr "," "\n")
+  
   for tag in $DOCKER_TAGS; do
     docker push $2/$INPUT_REPO:$tag
     echo ::set-output name=image::$2/$INPUT_REPO:$tag
