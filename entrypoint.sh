@@ -19,6 +19,8 @@ function main() {
   aws_configure
   login
 
+  read_consul_template
+
   create_ecr_repo $INPUT_CREATE_REPO
   update_ecr_repo_policy $INPUT_CREATE_POLICY $INPUT_ECR_POLICIES
 
@@ -29,6 +31,42 @@ function main() {
     docker_tag $INPUT_TAGS $INPUT_ECR_REGISTRY
   fi;
   docker_push_to_ecr $INPUT_TAGS $INPUT_ECR_REGISTRY
+}
+
+function check_behavior_mode() {
+  if [ $INPUT_USE_CONSUL == "true" ] ; then
+    if [ -z $INPUT_APP_ENV ]; then
+      echo "======> APP_ENV is missing"
+      exit 1
+    fi
+
+    if [ -z $INPUT_CONSUL_HTTP_ADDR ]; then
+      echo "======> CONSUL_HTTP_ADDR is missing"
+      exit 2
+    fi
+
+    if [ -z $INPUT_CONSUL_HTTP_TOKEN ]; then
+      echo "======> CONSUL_HTTP_TOKEN is missing"
+      exit 3
+    fi
+
+    if [ -z $INPUT_APP_PATH ]; then
+      echo "======> APP_PATH is missing"
+      exit 1
+    fi
+
+    if [ -z $INPUT_ENV_FILE ]; then
+      echo "======> ENV_FILE is missing"
+      exit 1
+    fi
+    sed -ie "s/{APP_ENV}/$INPUT_APP_ENV/g" ./docker/consul/env.tmpl 
+    sed -ie "s/{APP_PATH}/$INPUT_APP_PATH/g" ./docker/consul/env.tmpl 
+    cp ./docker/consul/env.tmpl $INPUT_ENV_FILE
+    ./consul-template -template="./docker/consul/env.tmpl:./$INPUT_ENV_FILE" \
+                 -config ./docker/consul/config.hcl -once -log-level info
+  fi;
+
+
 }
 
 function check_behavior_mode() {
