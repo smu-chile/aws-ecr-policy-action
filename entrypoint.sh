@@ -69,6 +69,17 @@ function login() {
   echo "== FINISHED LOGIN"
 }
 
+function gh_configure() {
+  export CR_PAT=$GH_REGISTRY_TOKEN
+}
+
+function gh_login() {
+  echo "== START LOGIN"
+  LOGIN_COMMAND=$(echo $CR_PAT | docker login ghcr.io -u $GH_REGISTRY_USER --password-stdin)
+  $LOGIN_COMMAND
+  echo "== FINISHED LOGIN"
+}
+
 function create_ecr_repo() {
   if [ "${1}" == "true" ]; then
     echo "== START CREATE REPO"
