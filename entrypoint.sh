@@ -12,6 +12,8 @@ function main() {
   sanitize "${INPUT_ECR_POLICIES}" "ecr_policies"
   sanitize "${INPUT_SCAN_IMAGES}" "scan_images"
   sanitize "${INPUT_BEHAVIOR}" "behavior"
+  sanitize "${INPUT_GH_REGISTRY_TOKEN}" "gh_registry_token"
+  sanitize "${INPUT_GH_REGISTRY_USER}" "gh_registry_user"
 
   shopt -s nocasematch;
   
@@ -71,6 +73,7 @@ function login() {
 
 function gh_configure() {
   export CR_PAT=$GH_REGISTRY_TOKEN
+  export GH_REGISTRY_USER=$GH_REGISTRY_USER
 }
 
 function gh_login() {
