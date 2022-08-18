@@ -12,6 +12,8 @@ function main() {
   sanitize "${INPUT_ECR_POLICIES}" "ecr_policies"
   sanitize "${INPUT_SCAN_IMAGES}" "scan_images"
   sanitize "${INPUT_BEHAVIOR}" "behavior"
+  sanitize "${INPUT_GH_REGISTRY_TOKEN}" "gh_registry_token"
+  sanitize "${INPUT_GH_REGISTRY_USER}" "gh_registry_user"
 
   shopt -s nocasematch;
   
@@ -65,6 +67,18 @@ function aws_configure() {
 function login() {
   echo "== START LOGIN"
   LOGIN_COMMAND=$(aws ecr get-login --no-include-email --region $AWS_DEFAULT_REGION)
+  $LOGIN_COMMAND
+  echo "== FINISHED LOGIN"
+}
+
+function gh_configure() {
+  export CR_PAT=$GH_REGISTRY_TOKEN
+  export GH_REGISTRY_USER=$GH_REGISTRY_USER
+}
+
+function gh_login() {
+  echo "== START LOGIN"
+  LOGIN_COMMAND=$(echo $CR_PAT | docker login ghcr.io -u $GH_REGISTRY_USER --password-stdin)
   $LOGIN_COMMAND
   echo "== FINISHED LOGIN"
 }
