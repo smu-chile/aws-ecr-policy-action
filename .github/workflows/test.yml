@@ -1,6 +1,23 @@
 name: Test
 on: [push,workflow_dispatch]
 jobs:
+  PrismaScan:
+    env:
+      IMAGE_NAME: testimage
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: Build a Docker image
+      run: docker build . --tag $IMAGE_NAME
+
+    - name: Prisma Cloud image scan
+      id: scan
+      uses: PaloAltoNetworks/prisma-cloud-scan@v1
+      with:
+        pcc_console_url: ${{ secrets.PCC_CONSOLE_URL }}
+        pcc_user: ${{ secrets.PCC_USER }}
+        pcc_pass: ${{ secrets.PCC_PASS }}
+        image_name: ${{ env.IMAGE_NAME }} 
   build:
     runs-on: ubuntu-latest
     steps:
