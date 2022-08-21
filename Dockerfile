@@ -12,6 +12,8 @@ RUN apk add --no-cache python3=3.10.5-r0 py3-pip=22.1.1-r0 && \
     pip install awscli && \
     rm -rf /var/cache/apk/*
 
+RUN apk info
+
 ADD entrypoint.sh /entrypoint.sh
 
 RUN ["chmod", "+x", "/entrypoint.sh"]
