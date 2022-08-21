@@ -9,6 +9,7 @@ RUN apk add --no-cache python3=3.10.5-r0 go=1.18.5-r0 py3-pip=22.1.1-r0 && \
     ncurses=6.3_p20220521-r0 && \
     bash=5.1.16-r2 && \
     pip install awscli && \
+    apk --purge -v del py3-pip go && \
     rm -rf /var/cache/apk/*
 
 RUN apk info
