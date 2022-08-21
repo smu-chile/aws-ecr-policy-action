@@ -2,7 +2,7 @@ FROM docker:20.10.17
 
 RUN apk update \
   && apk upgrade \
-  && apk add --no-cache python3=3.10.5-r0 py-pip coreutils bash \
+  && apk add --no-cache python py-pip coreutils=9.1-r0 bash=5.1.16-r2 \
   && rm -rf /var/cache/apk/* \
   && pip install awscli \
   && apk --purge -v del py-pip
