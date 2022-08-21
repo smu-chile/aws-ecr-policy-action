@@ -1,8 +1,6 @@
 FROM docker:19.03.4
 
-RUN apk update \
-  && apk upgrade \
-  && apk add --no-cache --update python py-pip coreutils bash && \
+RUN apk add --no-cache python py-pip coreutils bash && \
   openssl=1.1.1q-r0 \
   sqlite=3.32.1-r1 \
   && rm -rf /var/cache/apk/* \
