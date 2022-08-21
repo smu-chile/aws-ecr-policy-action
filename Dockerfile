@@ -11,8 +11,7 @@ RUN apk add --no-cache zlib=1.2.12-r3 && \
     busybox=1.30.1-r5 && \
     ncurses=6.3_p20220521-r0 && \
     bash=5.1.16-r2 && \
-    go=1.18.5-r0 && \
-    rm -rf /var/cache/apk/*
+    go=1.18.5-r0
 
 ADD entrypoint.sh /entrypoint.sh
 
