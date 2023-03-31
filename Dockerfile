@@ -1,4 +1,4 @@
-FROM docker:19.03.4
+FROM docker:23.0.2
 
 RUN apk update \
   && apk upgrade \
