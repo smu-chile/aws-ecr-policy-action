@@ -57,14 +57,15 @@ function sanitize() {
 }
 
 function aws_configure() {
-  export AWS_ACCESS_KEY=$INPUT_ACCESS_KEY_ID
-  export AWS_SECRET_KEY=$INPUT_SECRET_ACCESS_KEY
+  export AWS_ACCESS_KE_ID=$INPUT_ACCESS_KEY_ID
+  export AWS_SECRET_ACCESS_KEY=$INPUT_SECRET_ACCESS_KEY
   export AWS_DEFAULT_REGION=$INPUT_REGION
+  aws configure set AWS_ACCESS_KEY_ID=$INPUT_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY=$INPUT_SECRET_ACCESS_KEY AWS_DEFAULT_REGION=$INPUT_REGION
 }
 
 function login() {
   echo "== START LOGIN"
-  LOGIN_COMMAND=$(aws ecr get-login-password)
+  LOGIN_COMMAND=$(aws ecr get-login-password --region $AWS_DEFAULT_REGION)
   $LOGIN_COMMAND
   echo "== FINISHED LOGIN"
 }
