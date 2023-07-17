@@ -65,6 +65,7 @@ function aws_configure() {
 
 function login() {
   echo "== START LOGIN"
+  aws configure set AWS_ACCESS_KEY_ID=$INPUT_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY=$INPUT_SECRET_ACCESS_KEY
   LOGIN_COMMAND=$(aws ecr get-login-password --region $AWS_DEFAULT_REGION)
   $LOGIN_COMMAND
   echo "== FINISHED LOGIN"
