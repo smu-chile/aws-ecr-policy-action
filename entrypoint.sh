@@ -122,9 +122,9 @@ function update_ecr_repo_policy() {
     
     echo "== END BUILD RULES"
     echo "== START CREATE REPO POLICY"
-    docker run --rm -i -e AWS_ACCESS_KEY_ID=$INPUT_ACCESS_KEY_ID -e AWS_SECRET_ACCESS_KEY=$INPUT_SECRET_ACCESS_KEY -e AWS_DEFAULT_OUTPUT=json amazon/aws-cli ecr get-lifecycle-policy --repository-name $INPUT_REPO > /dev/null 2>&1 && \
-    docker run --rm -i -e AWS_ACCESS_KEY_ID=$INPUT_ACCESS_KEY_ID -e AWS_SECRET_ACCESS_KEY=$INPUT_SECRET_ACCESS_KEY -e AWS_DEFAULT_OUTPUT=json amazon/aws-cli ecr delete-lifecycle-policy --repository-name $INPUT_REPO
-    docker run --rm -i -e AWS_ACCESS_KEY_ID=$INPUT_ACCESS_KEY_ID -e AWS_SECRET_ACCESS_KEY=$INPUT_SECRET_ACCESS_KEY -e AWS_DEFAULT_OUTPUT=json amazon/aws-cli ecr put-lifecycle-policy --repository-name $INPUT_REPO --lifecycle-policy-text "$ruleStart$ruleText$ruleEnd" 
+    docker run --rm -i -e AWS_ACCESS_KEY_ID=$INPUT_ACCESS_KEY_ID -e AWS_SECRET_ACCESS_KEY=$INPUT_SECRET_ACCESS_KEY -e AWS_DEFAULT_OUTPUT=json -e AWS_DEFAULT_REGION=$INPUT_REGION amazon/aws-cli ecr get-lifecycle-policy --repository-name $INPUT_REPO > /dev/null 2>&1 && \
+    docker run --rm -i -e AWS_ACCESS_KEY_ID=$INPUT_ACCESS_KEY_ID -e AWS_SECRET_ACCESS_KEY=$INPUT_SECRET_ACCESS_KEY -e AWS_DEFAULT_OUTPUT=json -e AWS_DEFAULT_REGION=$INPUT_REGION amazon/aws-cli ecr delete-lifecycle-policy --repository-name $INPUT_REPO
+    docker run --rm -i -e AWS_ACCESS_KEY_ID=$INPUT_ACCESS_KEY_ID -e AWS_SECRET_ACCESS_KEY=$INPUT_SECRET_ACCESS_KEY -e AWS_DEFAULT_OUTPUT=json -e AWS_DEFAULT_REGION=$INPUT_REGION amazon/aws-cli ecr put-lifecycle-policy --repository-name $INPUT_REPO --lifecycle-policy-text "$ruleStart$ruleText$ruleEnd" 
     echo "== FINISHED CREATE REPO POLICY"
   fi
 }
