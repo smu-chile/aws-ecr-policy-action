@@ -70,14 +70,14 @@ function aws_configure() {
   echo "[default]" > /root/.aws/config
   echo "region = $AWS_DEFAULT_REGION" >> /root/.aws/config
 
-  docker pull amazon/aws-cli:2.0.6
- 
+  docker pull amazon/aws-cli
+
 
 }
 function login() {
   echo "== START LOGIN"
 
-  docker run --rm -i -v /root/.aws:/root/.aws amazon/aws-cli:2.0.6 ecr help
+  docker run --rm -i -v /root/.aws:/root/.aws amazon/aws-cli ecr help
 
   ls -la /root/.aws
   
@@ -86,7 +86,7 @@ function login() {
   #LOGIN_COMMAND=$(aws ecr get-login --no-include-email --region $AWS_DEFAULT_REGION)
   #$LOGIN_COMMAND
 
-  LOGIN_COMMAND=$(docker run --rm -i -v ~/.aws:/root/.aws amazon/aws-cli:2.0.6 ecr get-login-password --region $INPUT_REGION )
+  LOGIN_COMMAND=$(docker run --rm -i -v ~/.aws:/root/.aws amazon/aws-cli ecr get-login-password --region $INPUT_REGION )
   echo `expr substr ${LOGIN_COMMAND} 0 10`
   LOGIN_COMMAND1=$(docker login --username AWS --password $LOGIN_COMMAND $INPUT_ECR_REGISTRY)
   $LOGIN_COMMAND1
