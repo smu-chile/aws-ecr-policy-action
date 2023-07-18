@@ -74,6 +74,8 @@ function login() {
   #LOGIN_COMMAND=$(aws ecr get-login-password --no-include-email --region $AWS_DEFAULT_REGION)
 
   alias aws='docker run --rm -ti -v /root/.aws:/root/.aws amazon/aws-cli:2.0.6'
+
+  head -c 21 /root/.aws
   
   LOGIN_COMMAND=$(docker run --rm -i -v /root/.aws:/root/.aws amazon/aws-cli:2.0.6 ecr get-login-password --region $INPUT_REGION)
   LOGIN_COMMAND1=$(docker login --username AWS --password $LOGIN_COMMAND $INPUT_ECR_REGISTRY)
