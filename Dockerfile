@@ -1,12 +1,11 @@
-FROM docker:19.03.4
+FROM docker:24.0.4-cli-alpine3.18
 
 RUN apk update \
   && apk upgrade \
-  && apk add --no-cache --update python py-pip coreutils bash \
+  && apk add --no-cache python3 py3-pip coreutils bash \
   && rm -rf /var/cache/apk/* \
-  && pip install awscli \
-  && apk --purge -v del py-pip
-
+  && apk --purge -v del py-pip 
+  
 ADD entrypoint.sh /entrypoint.sh
 
 RUN ["chmod", "+x", "/entrypoint.sh"]
