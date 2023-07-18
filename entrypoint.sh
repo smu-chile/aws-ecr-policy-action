@@ -60,8 +60,12 @@ function aws_configure() {
   export AWS_ACCESS_KEY_ID=$INPUT_ACCESS_KEY_ID
   export AWS_SECRET_ACCESS_KEY=$INPUT_SECRET_ACCESS_KEY
   export AWS_DEFAULT_REGION=$INPUT_REGION
-}
 
+  echo "AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID" > /root/.aws
+  echo "AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY" >> /root/.aws
+  echo "AWS_DEFAULT_REGION=$AWS_DEFAULT_REGION" >> /root/.aws
+
+}
 function login() {
   echo "== START LOGIN"
   #LOGIN_COMMAND=$(aws ecr get-login-password --no-include-email --region $AWS_DEFAULT_REGION)
