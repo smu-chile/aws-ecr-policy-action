@@ -73,7 +73,9 @@ function login() {
   echo "== START LOGIN"
   #LOGIN_COMMAND=$(aws ecr get-login-password --no-include-email --region $AWS_DEFAULT_REGION)
 
-  alias aws='docker run --rm -ti -v /root/.aws:/root/.aws amazon/aws-cli:2.0.6'
+  export AWS_ACCESS_KEY_ID=$INPUT_ACCESS_KEY_ID
+  export AWS_SECRET_ACCESS_KEY=$INPUT_SECRET_ACCESS_KEY
+  export AWS_DEFAULT_REGION=$INPUT_REGION
 
   head -c 21 /root/.aws
   
