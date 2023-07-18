@@ -4,9 +4,12 @@ jobs:
   PrismaScan:
     env:
       IMAGE_NAME: testimage
+    runs-on: ubuntu-latest
+    steps:
     - uses: actions/checkout@v3
     - name: Build a Docker image
       run: docker build . --tag $IMAGE_NAME
+
     - name: Prisma Cloud image scan
       id: scan
       uses: PaloAltoNetworks/prisma-cloud-scan@v1
