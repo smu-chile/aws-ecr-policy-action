@@ -64,15 +64,15 @@ function aws_configure() {
 }
 function login() {
   echo "== START LOGIN"
-  LOGIN_COMMAND=$(docker run --rm -i -e AWS_ACCESS_KEY_ID=$INPUT_ACCESS_KEY_ID -e AWS_SECRET_ACCESS_KEY=$INPUT_SECRET_ACCESS_KEY amazon/aws-cli ecr get-login-password --region $INPUT_REGION | docker login --username AWS --password-stdin $LOGIN_COMMAND $INPUT_ECR_REGISTRY)
+  LOGIN_COMMAND=$(docker run --rm -i -e AWS_ACCESS_KEY_ID=$INPUT_ACCESS_KEY_ID -e AWS_SECRET_ACCESS_KEY=$INPUT_SECRET_ACCESS_KEY -e AWS_DEFAULT_OUTPUT=json -e AWS_DEFAULT_REGION=$INPUT_REGION  amazon/aws-cli ecr get-login-password --region $INPUT_REGION | docker login --username AWS --password-stdin $LOGIN_COMMAND $INPUT_ECR_REGISTRY)
   echo "== FINISHED LOGIN"
 }
 
 function create_ecr_repo() {
   if [ "${1}" == "true" ]; then
     echo "== START CREATE REPO"
-    docker run --rm -i -e AWS_ACCESS_KEY_ID=$INPUT_ACCESS_KEY_ID -e AWS_SECRET_ACCESS_KEY=$INPUT_SECRET_ACCESS_KEY amazon/aws-cli ecr describe-repositories --region $AWS_DEFAULT_REGION --repository-names $INPUT_REPO > /dev/null 2>&1 || \
-    docker run --rm -i -e AWS_ACCESS_KEY_ID=$INPUT_ACCESS_KEY_ID -e AWS_SECRET_ACCESS_KEY=$INPUT_SECRET_ACCESS_KEY amazon/aws-cli ecr create-repository --region $AWS_DEFAULT_REGION --repository-name $INPUT_REPO --image-scanning-configuration scanOnPush=$INPUT_SCAN_IMAGES
+    docker run --rm -i -e AWS_ACCESS_KEY_ID=$INPUT_ACCESS_KEY_ID -e AWS_SECRET_ACCESS_KEY=$INPUT_SECRET_ACCESS_KEY -e AWS_DEFAULT_OUTPUT=json -e AWS_DEFAULT_REGION=$INPUT_REGION  amazon/aws-cli ecr describe-repositories --region $AWS_DEFAULT_REGION --repository-names $INPUT_REPO > /dev/null 2>&1 || \
+    docker run --rm -i -e AWS_ACCESS_KEY_ID=$INPUT_ACCESS_KEY_ID -e AWS_SECRET_ACCESS_KEY=$INPUT_SECRET_ACCESS_KEY -e AWS_DEFAULT_OUTPUT=json -e AWS_DEFAULT_REGION=$INPUT_REGION  amazon/aws-cli ecr create-repository --region $AWS_DEFAULT_REGION --repository-name $INPUT_REPO --image-scanning-configuration scanOnPush=$INPUT_SCAN_IMAGES
     echo "== FINISHED CREATE REPO"
   fi;
 }
