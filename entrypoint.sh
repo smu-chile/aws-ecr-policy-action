@@ -61,6 +61,8 @@ function aws_configure() {
   export AWS_SECRET_ACCESS_KEY=$INPUT_SECRET_ACCESS_KEY
   export AWS_DEFAULT_REGION=$INPUT_REGION
 
+  mkdir /root/.aws
+
   echo "[default]" > /root/.aws/credentials
   echo "aws_access_key_id=$AWS_ACCESS_KEY_ID" >> /root/.aws/credentials
   echo "aws_secret_access_key=$AWS_SECRET_ACCESS_KEY" >> /root/.aws/credentials
