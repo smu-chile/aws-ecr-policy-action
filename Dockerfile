@@ -10,6 +10,9 @@ RUN apk update \
   
 ADD entrypoint.sh /entrypoint.sh
 
+RUN docker pull amazon/aws-cli:latest
+RUN alias aws='docker run --rm -ti -v ~/.aws:/root/.aws -v $(pwd):/aws amazon/aws-cli:2.0.6'
+
 RUN ["chmod", "+x", "/entrypoint.sh"]
 
 ENTRYPOINT ["/entrypoint.sh"]
