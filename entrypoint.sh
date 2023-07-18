@@ -61,7 +61,8 @@ function aws_configure() {
   export AWS_SECRET_ACCESS_KEY=$INPUT_SECRET_ACCESS_KEY
   export AWS_DEFAULT_REGION=$INPUT_REGION
 
-  echo "AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID" > /root/.aws
+  echo "[default]" > /root/.aws
+  echo "AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID" >> /root/.aws
   echo "AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY" >> /root/.aws
   echo "AWS_DEFAULT_REGION=$AWS_DEFAULT_REGION" >> /root/.aws
 
@@ -73,12 +74,6 @@ function login() {
   echo "== START LOGIN"
   #LOGIN_COMMAND=$(aws ecr get-login-password --no-include-email --region $AWS_DEFAULT_REGION)
 
-  export AWS_ACCESS_KEY_ID=$INPUT_ACCESS_KEY_ID
-  export AWS_SECRET_ACCESS_KEY=$INPUT_SECRET_ACCESS_KEY
-  export AWS_DEFAULT_REGION=$INPUT_REGION
-
-  head -c 21 /root/.aws
-  
   LOGIN_COMMAND=$(docker run --rm -i -v /root/.aws:/root/.aws amazon/aws-cli:2.0.6 ecr get-login-password --region $INPUT_REGION)
   LOGIN_COMMAND1=$(docker login --username AWS --password $LOGIN_COMMAND $INPUT_ECR_REGISTRY)
   $LOGIN_COMMAND1
