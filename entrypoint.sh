@@ -61,44 +61,18 @@ function aws_configure() {
   export AWS_SECRET_ACCESS_KEY=$INPUT_SECRET_ACCESS_KEY
   export AWS_DEFAULT_REGION=$INPUT_REGION
 
-  mkdir /root/.aws
-
-  echo "[default]" > /root/.aws/credentials
-  echo "aws_access_key_id = $AWS_ACCESS_KEY_ID" >> /root/.aws/credentials
-  echo "aws_secret_access_key = $AWS_SECRET_ACCESS_KEY" >> /root/.aws/credentials
-
-  echo "[default]" > /root/.aws/config
-  echo "region = $AWS_DEFAULT_REGION" >> /root/.aws/config
-
-  docker pull amazon/aws-cli
-
-
 }
 function login() {
   echo "== START LOGIN"
-
-  docker run --rm -i -v /root/.aws:/root/.aws amazon/aws-cli ecr help
-
-  ls -la /root/.aws
-  
-  #LOGIN_COMMAND=$(aws ecr get-login-password --no-include-email --region $AWS_DEFAULT_REGION)
-
-  #LOGIN_COMMAND=$(aws ecr get-login --no-include-email --region $AWS_DEFAULT_REGION)
-  #$LOGIN_COMMAND
-
-  LOGIN_COMMAND=$(docker run --rm -i -v ~/.aws:/root/.aws -e AWS_ACCESS_KEY_ID=$INPUT_ACCESS_KEY_ID -e AWS_SECRET_ACCESS_KEY=$INPUT_SECRET_ACCESS_KEY  amazon/aws-cli ecr get-login-password --region $INPUT_REGION | docker login --username AWS --password-stdin $LOGIN_COMMAND $INPUT_ECR_REGISTRY)
-  #echo `expr substr ${LOGIN_COMMAND} 0 10`
-  #LOGIN_COMMAND1=$()
-  #$LOGIN_COMMAND1
-  
+  LOGIN_COMMAND=$(docker run --rm -i -e AWS_ACCESS_KEY_ID=$INPUT_ACCESS_KEY_ID -e AWS_SECRET_ACCESS_KEY=$INPUT_SECRET_ACCESS_KEY amazon/aws-cli ecr get-login-password --region $INPUT_REGION | docker login --username AWS --password-stdin $LOGIN_COMMAND $INPUT_ECR_REGISTRY)
   echo "== FINISHED LOGIN"
 }
 
 function create_ecr_repo() {
   if [ "${1}" == "true" ]; then
     echo "== START CREATE REPO"
-    aws ecr describe-repositories --region $AWS_DEFAULT_REGION --repository-names $INPUT_REPO > /dev/null 2>&1 || \
-      aws ecr create-repository --region $AWS_DEFAULT_REGION --repository-name $INPUT_REPO --image-scanning-configuration scanOnPush=$INPUT_SCAN_IMAGES
+    docker run --rm -i -e AWS_ACCESS_KEY_ID=$INPUT_ACCESS_KEY_ID -e AWS_SECRET_ACCESS_KEY=$INPUT_SECRET_ACCESS_KEY amazon/aws-cli ecr describe-repositories --region $AWS_DEFAULT_REGION --repository-names $INPUT_REPO > /dev/null 2>&1 || \
+    docker run --rm -i -e AWS_ACCESS_KEY_ID=$INPUT_ACCESS_KEY_ID -e AWS_SECRET_ACCESS_KEY=$INPUT_SECRET_ACCESS_KEY amazon/aws-cli ecr create-repository --region $AWS_DEFAULT_REGION --repository-name $INPUT_REPO --image-scanning-configuration scanOnPush=$INPUT_SCAN_IMAGES
     echo "== FINISHED CREATE REPO"
   fi;
 }
@@ -148,9 +122,9 @@ function update_ecr_repo_policy() {
     
     echo "== END BUILD RULES"
     echo "== START CREATE REPO POLICY"
-    aws ecr get-lifecycle-policy --repository-name $INPUT_REPO > /dev/null 2>&1 && \
-      aws ecr delete-lifecycle-policy --repository-name $INPUT_REPO
-    aws ecr put-lifecycle-policy --repository-name $INPUT_REPO --lifecycle-policy-text "$ruleStart$ruleText$ruleEnd" 
+    docker run --rm -i -e AWS_ACCESS_KEY_ID=$INPUT_ACCESS_KEY_ID -e AWS_SECRET_ACCESS_KEY=$INPUT_SECRET_ACCESS_KEY amazon/aws-cli ecr get-lifecycle-policy --repository-name $INPUT_REPO > /dev/null 2>&1 && \
+    docker run --rm -i -e AWS_ACCESS_KEY_ID=$INPUT_ACCESS_KEY_ID -e AWS_SECRET_ACCESS_KEY=$INPUT_SECRET_ACCESS_KEY amazon/aws-cli ecr delete-lifecycle-policy --repository-name $INPUT_REPO
+    docker run --rm -i -e AWS_ACCESS_KEY_ID=$INPUT_ACCESS_KEY_ID -e AWS_SECRET_ACCESS_KEY=$INPUT_SECRET_ACCESS_KEY amazon/aws-cli ecr put-lifecycle-policy --repository-name $INPUT_REPO --lifecycle-policy-text "$ruleStart$ruleText$ruleEnd" 
     echo "== FINISHED CREATE REPO POLICY"
   fi
 }
