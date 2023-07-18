@@ -60,8 +60,6 @@ function aws_configure() {
   export AWS_ACCESS_KEY_ID=$INPUT_ACCESS_KEY_ID
   export AWS_SECRET_ACCESS_KEY=$INPUT_SECRET_ACCESS_KEY
   export AWS_DEFAULT_REGION=$INPUT_REGION
-
-  aws configure
 }
 
 function login() {
