@@ -61,10 +61,10 @@ function aws_configure() {
   export AWS_SECRET_ACCESS_KEY=$INPUT_SECRET_ACCESS_KEY
   export AWS_DEFAULT_REGION=$INPUT_REGION
 
-  echo "[default]" > /root/.aws
-  echo "AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID" >> /root/.aws
-  echo "AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY" >> /root/.aws
-  echo "AWS_DEFAULT_REGION=$AWS_DEFAULT_REGION" >> /root/.aws
+  echo "[default]" > /root/.aws/credentials
+  echo "aws_access_key_id=$AWS_ACCESS_KEY_ID" >> /root/.aws/credentials
+  echo "aws_secret_access_key=$AWS_SECRET_ACCESS_KEY" >> /root/.aws/credentials
+  echo "aws_default_region=$AWS_DEFAULT_REGION" >> /root/.aws/credentials
 
   docker pull amazon/aws-cli:2.0.6
  
