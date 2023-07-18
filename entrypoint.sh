@@ -13,6 +13,8 @@ function main() {
   sanitize "${INPUT_SCAN_IMAGES}" "scan_images"
   sanitize "${INPUT_BEHAVIOR}" "behavior"
 
+  export AWS_CLI_VER="2.13.1"
+
   shopt -s nocasematch;
   
   check_behavior_mode
@@ -64,15 +66,15 @@ function aws_configure() {
 }
 function login() {
   echo "== START LOGIN"
-  LOGIN_COMMAND=$(docker run --rm -i -e AWS_ACCESS_KEY_ID=$INPUT_ACCESS_KEY_ID -e AWS_SECRET_ACCESS_KEY=$INPUT_SECRET_ACCESS_KEY -e AWS_DEFAULT_OUTPUT=json -e AWS_DEFAULT_REGION=$INPUT_REGION  amazon/aws-cli ecr get-login-password --region $INPUT_REGION | docker login --username AWS --password-stdin $LOGIN_COMMAND $INPUT_ECR_REGISTRY)
+  LOGIN_COMMAND=$(docker run --rm -i -e AWS_ACCESS_KEY_ID=$INPUT_ACCESS_KEY_ID -e AWS_SECRET_ACCESS_KEY=$INPUT_SECRET_ACCESS_KEY -e AWS_DEFAULT_OUTPUT=json -e AWS_DEFAULT_REGION=$INPUT_REGION  amazon/aws-cli:$AWS_CLI_VER ecr get-login-password --region $INPUT_REGION | docker login --username AWS --password-stdin $LOGIN_COMMAND $INPUT_ECR_REGISTRY)
   echo "== FINISHED LOGIN"
 }
 
 function create_ecr_repo() {
   if [ "${1}" == "true" ]; then
     echo "== START CREATE REPO"
-    docker run --rm -i -e AWS_ACCESS_KEY_ID=$INPUT_ACCESS_KEY_ID -e AWS_SECRET_ACCESS_KEY=$INPUT_SECRET_ACCESS_KEY -e AWS_DEFAULT_OUTPUT=json -e AWS_DEFAULT_REGION=$INPUT_REGION  amazon/aws-cli ecr describe-repositories --region $AWS_DEFAULT_REGION --repository-names $INPUT_REPO > /dev/null 2>&1 || \
-    docker run --rm -i -e AWS_ACCESS_KEY_ID=$INPUT_ACCESS_KEY_ID -e AWS_SECRET_ACCESS_KEY=$INPUT_SECRET_ACCESS_KEY -e AWS_DEFAULT_OUTPUT=json -e AWS_DEFAULT_REGION=$INPUT_REGION  amazon/aws-cli ecr create-repository --region $AWS_DEFAULT_REGION --repository-name $INPUT_REPO --image-scanning-configuration scanOnPush=$INPUT_SCAN_IMAGES
+    docker run --rm -i -e AWS_ACCESS_KEY_ID=$INPUT_ACCESS_KEY_ID -e AWS_SECRET_ACCESS_KEY=$INPUT_SECRET_ACCESS_KEY -e AWS_DEFAULT_OUTPUT=json -e AWS_DEFAULT_REGION=$INPUT_REGION  amazon/aws-cli:$AWS_CLI_VER ecr describe-repositories --region $AWS_DEFAULT_REGION --repository-names $INPUT_REPO > /dev/null 2>&1 || \
+    docker run --rm -i -e AWS_ACCESS_KEY_ID=$INPUT_ACCESS_KEY_ID -e AWS_SECRET_ACCESS_KEY=$INPUT_SECRET_ACCESS_KEY -e AWS_DEFAULT_OUTPUT=json -e AWS_DEFAULT_REGION=$INPUT_REGION  amazon/aws-cli:$AWS_CLI_VER ecr create-repository --region $AWS_DEFAULT_REGION --repository-name $INPUT_REPO --image-scanning-configuration scanOnPush=$INPUT_SCAN_IMAGES
     echo "== FINISHED CREATE REPO"
   fi;
 }
@@ -122,9 +124,9 @@ function update_ecr_repo_policy() {
     
     echo "== END BUILD RULES"
     echo "== START CREATE REPO POLICY"
-    docker run --rm -i -e AWS_ACCESS_KEY_ID=$INPUT_ACCESS_KEY_ID -e AWS_SECRET_ACCESS_KEY=$INPUT_SECRET_ACCESS_KEY -e AWS_DEFAULT_OUTPUT=json -e AWS_DEFAULT_REGION=$INPUT_REGION amazon/aws-cli ecr get-lifecycle-policy --repository-name $INPUT_REPO > /dev/null 2>&1 && \
-    docker run --rm -i -e AWS_ACCESS_KEY_ID=$INPUT_ACCESS_KEY_ID -e AWS_SECRET_ACCESS_KEY=$INPUT_SECRET_ACCESS_KEY -e AWS_DEFAULT_OUTPUT=json -e AWS_DEFAULT_REGION=$INPUT_REGION amazon/aws-cli ecr delete-lifecycle-policy --repository-name $INPUT_REPO
-    docker run --rm -i -e AWS_ACCESS_KEY_ID=$INPUT_ACCESS_KEY_ID -e AWS_SECRET_ACCESS_KEY=$INPUT_SECRET_ACCESS_KEY -e AWS_DEFAULT_OUTPUT=json -e AWS_DEFAULT_REGION=$INPUT_REGION amazon/aws-cli ecr put-lifecycle-policy --repository-name $INPUT_REPO --lifecycle-policy-text "$ruleStart$ruleText$ruleEnd" 
+    docker run --rm -i -e AWS_ACCESS_KEY_ID=$INPUT_ACCESS_KEY_ID -e AWS_SECRET_ACCESS_KEY=$INPUT_SECRET_ACCESS_KEY -e AWS_DEFAULT_OUTPUT=json -e AWS_DEFAULT_REGION=$INPUT_REGION amazon/aws-cli:$AWS_CLI_VER ecr get-lifecycle-policy --repository-name $INPUT_REPO > /dev/null 2>&1 && \
+    docker run --rm -i -e AWS_ACCESS_KEY_ID=$INPUT_ACCESS_KEY_ID -e AWS_SECRET_ACCESS_KEY=$INPUT_SECRET_ACCESS_KEY -e AWS_DEFAULT_OUTPUT=json -e AWS_DEFAULT_REGION=$INPUT_REGION amazon/aws-cli:$AWS_CLI_VER ecr delete-lifecycle-policy --repository-name $INPUT_REPO
+    docker run --rm -i -e AWS_ACCESS_KEY_ID=$INPUT_ACCESS_KEY_ID -e AWS_SECRET_ACCESS_KEY=$INPUT_SECRET_ACCESS_KEY -e AWS_DEFAULT_OUTPUT=json -e AWS_DEFAULT_REGION=$INPUT_REGION amazon/aws-cli:$AWS_CLI_VER ecr put-lifecycle-policy --repository-name $INPUT_REPO --lifecycle-policy-text "$ruleStart$ruleText$ruleEnd" > /dev/null
     echo "== FINISHED CREATE REPO POLICY"
   fi
 }
