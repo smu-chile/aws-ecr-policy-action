@@ -65,6 +65,7 @@ function aws_configure() {
   echo "AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY" >> /root/.aws
   echo "AWS_DEFAULT_REGION=$AWS_DEFAULT_REGION" >> /root/.aws
 
+  docker pull amazon/aws-cli:2.0.6
   alias aws='docker run --rm -ti -v ~/.aws:/root/.aws -v $(pwd):/aws amazon/aws-cli:2.0.6'
 
 
