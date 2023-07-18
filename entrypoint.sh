@@ -86,10 +86,10 @@ function login() {
   #LOGIN_COMMAND=$(aws ecr get-login --no-include-email --region $AWS_DEFAULT_REGION)
   #$LOGIN_COMMAND
 
-  LOGIN_COMMAND=$(docker run --rm -i -v ~/.aws:/root/.aws -e AWS_ACCESS_KEY_ID=$INPUT_ACCESS_KEY_ID -e AWS_SECRET_ACCESS_KEY=$INPUT_SECRET_ACCESS_KEY  amazon/aws-cli ecr get-login-password --region $INPUT_REGION )
-  echo `expr substr ${LOGIN_COMMAND} 0 10`
-  LOGIN_COMMAND1=$(docker login --username AWS --password $LOGIN_COMMAND $INPUT_ECR_REGISTRY)
-  $LOGIN_COMMAND1
+  LOGIN_COMMAND=$(docker run --rm -i -v ~/.aws:/root/.aws -e AWS_ACCESS_KEY_ID=$INPUT_ACCESS_KEY_ID -e AWS_SECRET_ACCESS_KEY=$INPUT_SECRET_ACCESS_KEY  amazon/aws-cli ecr get-login-password --region $INPUT_REGION | docker login --username AWS --password-stdin $LOGIN_COMMAND $INPUT_ECR_REGISTRY)
+  #echo `expr substr ${LOGIN_COMMAND} 0 10`
+  #LOGIN_COMMAND1=$()
+  #$LOGIN_COMMAND1
   
   echo "== FINISHED LOGIN"
 }
