@@ -20,7 +20,7 @@ function main() {
   login
 
   create_ecr_repo $INPUT_CREATE_REPO
-  update_ecr_repo_policy $INPUT_CREATE_POLICY $INPUT_ECR_POLICIES
+  #update_ecr_repo_policy $INPUT_CREATE_POLICY $INPUT_ECR_POLICIES
 
   if [ $INPUT_BEHAVIOR == "build" ] ; then 
     run_pre_build_script $INPUT_PREBUILD_SCRIPT
