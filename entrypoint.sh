@@ -13,7 +13,7 @@ function main() {
   sanitize "${INPUT_SCAN_IMAGES}" "scan_images"
   sanitize "${INPUT_BEHAVIOR}" "behavior"
 
-  export AWS_CLI_VER="2.13.1"
+  export AWS_CLI_VER="2.24.22"
 
   shopt -s nocasematch;
   
