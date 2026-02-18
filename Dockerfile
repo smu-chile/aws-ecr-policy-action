@@ -1,4 +1,4 @@
-FROM docker:24.0.4-cli-alpine3.18
+FROM docker:25.0.0-cli
 
 RUN apk update \
   && apk upgrade \
