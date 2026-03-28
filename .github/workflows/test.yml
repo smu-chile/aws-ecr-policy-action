@@ -1,18 +1,20 @@
 name: Test
 on: [push,workflow_dispatch]
 jobs:
-  build:
+  PrismaScan:
+    env:
+      IMAGE_NAME: testimage
     runs-on: ubuntu-latest
     steps:
-    - name: Checkout
-      uses: actions/checkout@v2
+    - uses: actions/checkout@v3
+    - name: Build a Docker image
+      run: docker build . --tag $IMAGE_NAME
 
-    - name: Create and upload image
-      uses: ./
+    - name: Prisma Cloud image scan
+      id: scan
+      uses: PaloAltoNetworks/prisma-cloud-scan@v1
       with:
-        access_key_id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        ecr_registry: ${{ secrets.ECR_REGISTRY }}
-        region: us-east-1
-        repo: ${{ github.repository }}
-        tags: dev-${{ github.run_number }}
+        pcc_console_url: ${{ secrets.PCC_CONSOLE_URL }}
+        pcc_user: ${{ secrets.PCC_USER }}
+        pcc_pass: ${{ secrets.PCC_PASS }}
+        image_name: ${{ env.IMAGE_NAME }}
